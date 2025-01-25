@@ -1,4 +1,6 @@
-# AnySchedule
+# [WIP] AnySchedule
+
+***Still works in progress, no document, usage method are provided until first fully workalbe API get finished***
 
 A composer tool for custom complex scheduler. (Such as WSD lr scheduler or more)
 
