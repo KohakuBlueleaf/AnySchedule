@@ -28,7 +28,7 @@ class BaseScheduler:
         self.start = start or 0
         self.warmup = warmup or 0
         self.end = end or float("inf")
-        self.period = (self.end - self.start - self.warmup)//step_size
+        self.period = (self.end - self.start - self.warmup) // step_size
         self.step_size = step_size
 
         if self.end == float("inf"):

@@ -1,6 +1,1 @@
-from . import (
-    constant,
-    cosine,
-    step,
-    polynomial
-)
+from . import constant, cosine, step, polynomial

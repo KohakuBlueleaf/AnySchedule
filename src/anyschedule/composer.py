@@ -30,7 +30,7 @@ class Composer(BaseScheduler):
             start = current_schedule.start
             end = current_schedule.end
             st = end
-            final_value = current_schedule(end-1)
+            final_value = current_schedule(end - 1)
             if self.steps_schedule and start > self.steps_schedule[-1][1]:
                 self.steps_schedule.append((self.steps_schedule[-1][1], start, -1))
             self.steps_schedule.append((start, end, idx))
