@@ -1,0 +1,30 @@
+[lr]
+    mode = "composer"
+    value = 0
+    [[lr.schedules]]
+        end = 500
+        warmup = 100
+        mode = "constant"
+        value = 0.5
+    [[lr.schedules]]
+        end = 1000
+        mode = "cosine"
+        warmup = 50
+        value = 1
+        min_value = 0.01
+    [[lr.schedules]]
+        end = 1500
+        warmup = 50
+        value = 1
+        min_value = 0.01
+        mode = "polynomial"
+        power = 2
+    [[lr.schedules]]
+        end = 2000
+        warmup = 50
+        value = 1
+        min_value = 0.01
+        mode = "step"
+        gamma = 0.8
+        step_size = 50
+
