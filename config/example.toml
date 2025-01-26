@@ -1,6 +1,6 @@
 [lr]
     mode = "composer"
-    value = 0
+    value = 1.0
     [[lr.schedules]]
         end = 500
         warmup = 100
@@ -20,6 +20,36 @@
         mode = "polynomial"
         power = 2
     [[lr.schedules]]
+        end = 2000
+        warmup = 50
+        value = 1
+        min_value = 0.01
+        mode = "step"
+        gamma = 0.8
+        step_size = 50
+
+[weight_decay]
+    mode = "composer"
+    value = 1.0
+    [[weight_decay.schedules]]
+        end = 500
+        warmup = 100
+        mode = "constant"
+        value = 0.5
+    [[weight_decay.schedules]]
+        end = 1000
+        mode = "cosine"
+        warmup = 50
+        value = 1
+        min_value = 0.01
+    [[weight_decay.schedules]]
+        end = 1500
+        warmup = 50
+        value = 1
+        min_value = 0.01
+        mode = "polynomial"
+        power = 2
+    [[weight_decay.schedules]]
         end = 2000
         warmup = 50
         value = 1
