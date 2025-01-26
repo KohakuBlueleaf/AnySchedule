@@ -19,12 +19,51 @@ class AnySchedule(lr_scheduler.LRScheduler):
         verbose="deprecated",
         config: str | dict[str, Any] = {},
     ):
-        super(AnySchedule, self).__init__(optimizer, last_epoch)
         if isinstance(config, (str, Path)):
             config = toml.load(config)
         self.config = config
-        self.scheduler = get_scheduler(config)
+        self.schedulers = {key: get_scheduler(val) for key, val in config.items()}
+        self.base_param_groups = {
+            key: [group[key] for group in optimizer.param_groups]
+            for key in self.schedulers
+        }
+        super(AnySchedule, self).__init__(optimizer, last_epoch)
+
+    def state_dict(self):
+        """Return the state of the scheduler as a :class:`dict`.
+
+        It contains an entry for every variable in self.__dict__ which
+        is not the optimizer.
+        """
+        return {
+            key: value
+            for key, value in self.__dict__.items()
+            if key not in {"optimizer", "schedulers"}
+        }
+
+    def get_factors(self):
+        return {
+            key: scheduler(self.last_epoch)
+            for key, scheduler in self.schedulers.items()
+        }
 
     def get_lr(self):
-        factor = self.scheduler(self.last_epoch)
-        return [group["lr"] * factor for group in self.optimizer.param_groups]
+        if "lr" in self.schedulers:
+            factor = self.schedulers["lr"](self.last_epoch)
+            return [val * factor for val in self.base_param_groups["lr"]]
+        else:
+            return self.base_param_groups["lr"]
+
+    def step(self):
+        super(AnySchedule, self).step()
+        for key, scheduler in self.schedulers.items():
+            if key == "lr":
+                continue
+            factor = scheduler(self.last_epoch)
+            for group, val in zip(self.optimizer.param_groups, self.base_param_groups[key]):
+                if key not in group:
+                    continue
+                if isinstance(group[key], torch.Tensor):
+                    group[key].fill(factor * val)
+                else:
+                    group[key] = factor * val
