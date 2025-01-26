@@ -1,3 +1,6 @@
+# test/dataset
+data/
+
 # test/demo
 test*.py
 
