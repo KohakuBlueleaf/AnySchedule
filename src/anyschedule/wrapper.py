@@ -1,5 +1,6 @@
 from typing import Any
 from pathlib import Path
+from copy import deepcopy
 
 import torch
 import torch.nn as nn
@@ -21,8 +22,8 @@ class AnySchedule(lr_scheduler.LRScheduler):
     ):
         if isinstance(config, (str, Path)):
             config = toml.load(config)
-        self.config = config
-        self.schedulers = {key: get_scheduler(val) for key, val in config.items()}
+        self.config = deepcopy(config)
+        self.schedulers = {key: get_scheduler(val) for key, val in self.config.items()}
         self.base_param_groups = {
             key: [group[key] for group in optimizer.param_groups]
             for key in self.schedulers
