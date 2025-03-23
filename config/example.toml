@@ -1,26 +1,27 @@
 [lr]
     mode = "composer"
     value = 1.0
+    end = 2000
     [[lr.schedules]]
-        end = 500
+        end = 0.25
         warmup = 100
         mode = "constant"
         value = 0.5
     [[lr.schedules]]
-        end = 1000
+        end = 0.5
         mode = "cosine"
         warmup = 50
         value = 1
         min_value = 0.01
     [[lr.schedules]]
-        end = 1500
+        end = 0.75
         warmup = 50
         value = 1
         min_value = 0.01
         mode = "polynomial"
         power = 2
     [[lr.schedules]]
-        end = 2000
+        end = 1.0
         warmup = 50
         value = 1
         min_value = 0.01

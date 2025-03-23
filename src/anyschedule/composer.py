@@ -24,11 +24,15 @@ class Composer(BaseScheduler):
                 raise ValueError(
                     f"Only subclass of BaseScheduler or config dict can be used, got {schedule}"
                 )
-            current_schedule = schedules[idx]
+            current_schedule: BaseScheduler = schedules[idx]
             if current_schedule.init_value is None:
                 current_schedule.init_value = final_value
             start = current_schedule.start
             end = current_schedule.end
+            if isinstance(end, float):
+                assert self.end != float("inf"), "end must be provided when use ratio end steps"
+                current_schedule.set_end(self.end)
+                end = current_schedule.end
             st = end
             final_value = current_schedule(end - 1)
             if self.steps_schedule and start > self.steps_schedule[-1][1]:

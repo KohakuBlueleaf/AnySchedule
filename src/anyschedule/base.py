@@ -28,16 +28,28 @@ class BaseScheduler:
         self.start = start or 0
         self.warmup = warmup or 0
         self.end = end or float("inf")
-        self.period = (self.end - self.start - self.warmup) // step_size
         self.step_size = step_size
 
         if self.end == float("inf"):
             self.period = float("inf")
 
-        assert (
-            self.period > 0
-        ), f"Invalid settings: start={start}, end={end}, warmup={warmup}"
+        if isinstance(self.end, int):
+            self.period = (self.end - self.start - self.warmup) // step_size
+            assert (
+                self.period > 0
+            ), f"Invalid settings: start={start}, end={end}, warmup={warmup}"
         self._sub_init(**kwargs)
+
+    def set_end(self, reference_steps):
+        if isinstance(self.end, float):
+            self.end = int(self.end * reference_steps)
+            self.period = (self.end - self.start - self.warmup) // self.step_size
+            assert (
+                self.period > 0
+            ), f"Invalid settings: start={self.start}, end={self.end}, warmup={self.warmup}"
+        else:
+            self.end = reference_steps
+            self.period = (self.end - self.start - self.warmup) // self.step_size
 
     def _sub_init(self):
         pass
