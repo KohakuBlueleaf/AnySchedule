@@ -61,7 +61,9 @@ class AnySchedule(lr_scheduler.LRScheduler):
             if key == "lr":
                 continue
             factor = scheduler(self.last_epoch)
-            for group, val in zip(self.optimizer.param_groups, self.base_param_groups[key]):
+            for group, val in zip(
+                self.optimizer.param_groups, self.base_param_groups[key]
+            ):
                 if key not in group:
                     continue
                 if isinstance(group[key], torch.Tensor):

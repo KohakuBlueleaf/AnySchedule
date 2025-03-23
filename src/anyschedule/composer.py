@@ -30,7 +30,9 @@ class Composer(BaseScheduler):
             start = current_schedule.start
             end = current_schedule.end
             if isinstance(end, float):
-                assert self.end != float("inf"), "end must be provided when use ratio end steps"
+                assert self.end != float(
+                    "inf"
+                ), "end must be provided when use ratio end steps"
                 current_schedule.set_end(self.end)
                 end = current_schedule.end
             st = end
