@@ -10,6 +10,8 @@ class BaseScheduler:
     __call__: return the value of hyperparameter at "global" step
     """
 
+    ALLOW_OUTSIDE_PERIOD = True
+
     def __init__(
         self,
         start=None,
@@ -59,7 +61,7 @@ class BaseScheduler:
 
     def __call__(self, step):
         step -= self.start
-        if step >= self.end:
+        if step >= self.end and not self.ALLOW_OUTSIDE_PERIOD:
             raise ValueError(f"Step {step} is out of range [{self.start}, {self.end})")
         if step < self.warmup:
             interp = step / self.warmup
