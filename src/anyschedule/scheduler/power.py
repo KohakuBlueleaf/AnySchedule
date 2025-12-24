@@ -3,6 +3,14 @@ from ..base import BaseScheduler, register_scheduler
 
 @register_scheduler("power")
 class PowerScheduler(BaseScheduler):
+    """
+    This class is a simplified verison of "power scheduler"
+    where we assume all batch have same size and user only need to tune the s0/sref.
+    After simplification we found s0 can be sref directly inside AnySchedule schema.
+
+    Power Scheduler: A batch size and token number agnostic learning rate scheduler
+    https://arxiv.org/abs/2408.13359
+    """
     def _sub_init(self, s0=10, b=-0.5):
         assert s0 > 0, "s0 must be greater than 0"
         assert b < 0, "b must be less than 0"
