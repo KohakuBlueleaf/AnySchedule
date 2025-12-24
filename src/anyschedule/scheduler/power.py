@@ -11,6 +11,7 @@ class PowerScheduler(BaseScheduler):
     Power Scheduler: A batch size and token number agnostic learning rate scheduler
     https://arxiv.org/abs/2408.13359
     """
+
     def _sub_init(self, s0=10, b=-0.5):
         assert s0 > 0, "s0 must be greater than 0"
         assert b < 0, "b must be less than 0"
