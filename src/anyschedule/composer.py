@@ -8,8 +8,10 @@ class Composer(BaseScheduler):
     def _sub_init(
         self,
         schedules: dict[str, Any] = {},
+        infinite_end: bool = True,
     ):
         self.steps_schedule = []
+        self.infinite_end = infinite_end
         st = 0
         final_value = self.value
         for idx, schedule in enumerate(schedules):
@@ -25,7 +27,7 @@ class Composer(BaseScheduler):
                     f"Only subclass of BaseScheduler or config dict can be used, got {schedule}"
                 )
             current_schedule: BaseScheduler = schedules[idx]
-            if current_schedule.init_value is None:
+            if current_schedule.init_value is None and idx:
                 current_schedule.init_value = final_value
             start = current_schedule.start
             end = current_schedule.end
@@ -62,7 +64,11 @@ class Composer(BaseScheduler):
         return -1, -1, -1
 
     def _get_value(self, step):
-        if step < self.current_start or step >= self.current_end:
+        if step >= self.end and not self.infinite_end:
+            raise ValueError(f"Step {step} is out of range [{self.start}, {self.end})")
+        elif step >= self.end:
+            return self.current_schedule(step)
+        elif step < self.current_start or step >= self.current_end:
             self.current_start, self.current_end, idx = self.find_range(step)
             self.current_schedule = self.schedules[idx]
         return self.current_schedule(step)
